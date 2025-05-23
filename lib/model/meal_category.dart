@@ -1,18 +1,18 @@
 class MealCategory {
   final String name;
-  final String thumbnail;
+  final String thumb;
   final String description;
 
   MealCategory({
     required this.name,
-    required this.thumbnail,
+    required this.thumb,
     required this.description,
   });
 
   factory MealCategory.fromJson(Map<String, dynamic> json) {
     return MealCategory(
       name: json['strCategory'],
-      thumbnail: json['strCategoryThumb'],
+      thumb: json['strCategoryThumb'],
       description: json['strCategoryDescription'],
     );
   }
