@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/mainpage.dart';
+import 'package:flutter_app/model/meal_item.dart';
 
 class DetailPage extends StatefulWidget {
-  const DetailPage({super.key});
+  final MealItem meal;
+  const DetailPage({super.key, required this.meal});
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -10,6 +13,14 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
+    final meal = widget.meal;
+    if (meal == null || meal.name.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: Text('Chi tiết món ăn')),
+        body: Center(child: Text('Không có dữ liệu món ăn')),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
       body: SafeArea(
@@ -22,24 +33,36 @@ class _DetailPageState extends State<DetailPage> {
                   children: [
                     Stack(
                       children: [
-                        Image.asset(
-                          'assets/images/bgfood.jpg',
+                        Image.network(
+                          widget.meal.thumbnail,
                           width: double.infinity,
                           height: 288,
                           fit: BoxFit.cover,
-                          cacheWidth: 300,
                         ),
                         Positioned(
                           top: 50,
                           left: 16,
                           child: Row(
                             children: [
-                              Icon(Icons.arrow_back, color: Colors.white),
-                              Text(
-                                'Chi tiết',
-                                style: TextStyle(
+                              TextButton.icon(
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const MainPage(),
+                                    ),
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.arrow_back,
                                   color: Colors.white,
-                                  fontSize: 18,
+                                ),
+                                label: Text(
+                                  'Chi tiết',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
                                 ),
                               ),
                             ],
@@ -85,8 +108,8 @@ class _DetailPageState extends State<DetailPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Cách chiên trứng một cách cung phu',
-                            style: TextStyle(
+                            widget.meal.name,
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -97,8 +120,11 @@ class _DetailPageState extends State<DetailPage> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Cách chiên trứng một cách cung phu',
-                          style: TextStyle(fontSize: 17),
+                          '${widget.meal.category} • ${widget.meal.area}',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -188,38 +214,7 @@ class _DetailPageState extends State<DetailPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Dành cho 2–4 người ăn',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text('- 300g chân gà, luộc trong 20 phút'),
-                          Text('- 2 chiếc xúc xích bò'),
-                          Text('- 5 viên thịt bò'),
-                          Text('- 100g bắp cải tím, luộc cho đến khi mềm'),
-                          Text('- 1 quả trứng, đập tan'),
-                          Text('- 50g cà rốt xanh, cắt thành 4 miếng'),
-                          SizedBox(height: 20),
-                          Text(
-                            'Đối với bột gia vị',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text('- 15g tỏi'),
-                          Text('- 10g hành tím'),
-                          Text('- 25g hành tây'),
-                          Text('- 15g bột ớt'),
-                          Text('- 100g đường'),
-                          Text('- 50g xì dầu'),
-                          Text('- 15g đường thốt nốt'),
-                          Text('- 25g mật ong'),
-                          Text('- 50ml dầu ăn'),
+                          Text(widget.meal.instructions),
                           SizedBox(height: 20),
                           Center(
                             child: ElevatedButton.icon(
